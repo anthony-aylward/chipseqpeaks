@@ -20,6 +20,6 @@ setuptools.setup(
     ],
     install_requires=[],
     entry_points={
-        'console_scripts': ['call-peaks=chipseqpeaks.call_peaks:main',]
+        'console_scripts': ['chipseqpeaks-call=chipseqpeaks.call_peaks:main',]
     }
 )
