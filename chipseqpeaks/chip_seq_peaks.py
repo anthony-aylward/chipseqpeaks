@@ -12,14 +12,14 @@ MACS2 output stored in memory.
 Example
 -------
 import chipseqpeaks
-with chipseqpeaks.ChipSeqPeaks(<bytes object or path to BAM file>) as cp:
+with chipseqpeaks.ChIPSeqPeaks(<bytes object or path to BAM file>) as cp:
     cp.cleans_up = False
     cp.remove_blacklisted_peaks(<path/to/blacklist.bed>)
     cp.write(<output prefix>)
 
 Classes
 -------
-ChipSeqPeaks
+ChIPSeqPeaks
     object representing ChIP-seq peaks
 
 Functions

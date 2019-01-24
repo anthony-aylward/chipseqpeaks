@@ -1,0 +1,1 @@
+from chipseqpeaks.chip_seq_peaks import ChIPSeqPeaks
