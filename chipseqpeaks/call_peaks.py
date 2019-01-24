@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 #===============================================================================
 # call_peaks.py
 #===============================================================================
@@ -12,49 +11,13 @@
 
 import argparse
 import os.path
-import socket
-import sys
 
-hostname = socket.gethostname()
-if hostname == 'gatsby.ucsd.edu':
-    sys.path.append('/home/data/kglab-python3-modules')
-elif hostname == 'holden':
-    sys.path.append('/lab/kglab-python3-modules')
-
-import chipseqpeaks
+from chipseqpeaks.chip_seq_peaks import ChIPSeqPeaks
 
 
 
 
 # Functions ====================================================================
-
-def main():
-    args = parse_arguments()
-    with open(
-        os.path.join(args.output_dir, f'{args.name}.macs2_callpeaks.log'),
-        'w'
-    ) as f, open(
-        os.path.join(args.output_dir, f'{args.name}.bdgcmp.log'),
-        'w'
-    ) as g:
-        cp = chipseqpeaks.ChIPSeqPeaks(
-            args.treatment,
-            atac_seq=args.atac_seq,
-            control_bam=args.control,
-            qvalue=args.qvalue,
-	        broad=args.broad,
-	        broad_cutoff=args.broad_cutoff,
-            nomodel=args.nomodel,
-            shift=args.shift,
-	        log=f,
-            tmp_dir='/home/data/tmp'
-        )
-        if args.remove_blacklisted_peaks:
-            cp.remove_blacklisted_peaks(args.blacklist_file)
-        cp.log = g
-        cp.bdgcmp()
-        cp.write(os.path.join(args.output_dir, args.name))
-
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -150,9 +113,28 @@ def parse_arguments():
     return args
 
 
-
-
-# Execute ======================================================================
-
-if __name__ == '__main__':
-    main()
+def main():
+    args = parse_arguments()
+    with open(
+        os.path.join(args.output_dir, f'{args.name}.macs2_callpeaks.log'), 'w'
+    ) as f:
+        cp = ChIPSeqPeaks(
+            args.treatment,
+            atac_seq=args.atac_seq,
+            control_bam=args.control,
+            qvalue=args.qvalue,
+	        broad=args.broad,
+	        broad_cutoff=args.broad_cutoff,
+            nomodel=args.nomodel,
+            shift=args.shift,
+	        log=f,
+            tmp_dir='/home/data/tmp'
+        )
+        if args.remove_blacklisted_peaks:
+            cp.remove_blacklisted_peaks(args.blacklist_file)
+    with open(
+        os.path.join(args.output_dir, f'{args.name}.bdgcmp.log'), 'w'
+    ) as g:
+        cp.log = g
+        cp.bdgcmp()
+        cp.write(os.path.join(args.output_dir, args.name))
