@@ -1,9 +1,12 @@
-"""Easy management of ChIP-seq peak calling data
+# ChipSeqPeaks
+
+Easy management of ChIP-seq peak calling data
 
 A mini-module for managing ChIP-seq peak calling data. The language of this
 module treats "ChIP-seq peaks" as an abstraction, but mostly handles them as 
 MACS2 output stored in memory.
 
+```
 Example
 -------
 import chipseqpeaks
@@ -22,6 +25,4 @@ Functions
 parse_input
     check that an input is str or bytes and return the bam file as a bytes
     object
-"""
-
-from chipseqpeaks.chip_seq_peaks import ChIPSeqPeaks
+```
