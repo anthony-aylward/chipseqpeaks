@@ -130,8 +130,7 @@ def main():
 	        broad_cutoff=args.broad_cutoff,
             nomodel=args.nomodel,
             shift=args.shift,
-	        log=f,
-            tmp_dir='/home/data/tmp'
+	        log=f
         )
         if args.remove_blacklisted_peaks:
             cp.remove_blacklisted_peaks(
