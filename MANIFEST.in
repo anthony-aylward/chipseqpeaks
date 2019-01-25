@@ -1,1 +1,3 @@
 include chipseqpeaks/ENCFF001TDO.bed.gz
+include chipseqpeaks/ENCFF419RSJ.bed.gz
+include chipseqpeaks/ENCFF547MET.bed.gz
