@@ -282,18 +282,22 @@ class ChIPSeqPeaks():
     
     def remove_blacklisted_peaks(
         self,
-        blacklist_path=None,
-        genome='GRCh38'
+        blacklist_path: str = HG38_BLACKLIST_PATH,
+        genome: str = 'GRCh38'
     ):
         """Remove blacklisted peaks from the peak calls
         
         Parameters
         ----------
-        blacklist_path
+        blacklist_path : str
             path to the ENCODE blacklist file
+        genome : str
+            genome assembly (for selection of blacklist)
         """
 
-        if not blacklist_path:
+        if (blacklist_path == HG38_BLACKLIST_PATH) and (
+            genome not in {'GRCh38', 'hg38'}
+        ):
             blacklist_path = GENOME_TO_BLACKLIST[genome]
         for peaks in (self.peaks_narrowPeak,) + (
             (self.peaks_broadPeak, self.peaks_gappedPeak) if self.broad else ()

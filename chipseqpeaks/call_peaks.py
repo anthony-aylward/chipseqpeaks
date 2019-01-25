@@ -101,6 +101,7 @@ def parse_arguments():
     blacklist_group.add_argument(
         '--blacklist-file',
         metavar='<path/to/blacklist.bed>',
+        default=HG38_BLACKLIST_PATH,
         help='path to ENCODE blacklist file '
     )
     blacklist_group.add_argument(
