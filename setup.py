@@ -21,5 +21,6 @@ setuptools.setup(
     install_requires=[],
     entry_points={
         'console_scripts': ['chipseqpeaks-call=chipseqpeaks.call_peaks:main',]
-    }
+    },
+    include_package_data=True
 )

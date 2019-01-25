@@ -264,7 +264,12 @@ class ChIPSeqPeaks():
             ) as cat:
                 self.ppois_bdg, _ = cat.communicate()
     
-    def remove_blacklisted_peaks(self, blacklist_path: str):
+    def remove_blacklisted_peaks(
+        self,
+        blacklist_path: str = os.path.join(
+            os.path.dirname(__file__), 'ENCFF001TDO.bed.gz'
+        )
+    ):
         """Remove blacklisted peaks from the peak calls
         
         Parameters

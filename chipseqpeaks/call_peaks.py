@@ -101,11 +101,8 @@ def parse_arguments():
     blacklist_group.add_argument(
         '--blacklist-file',
         metavar='<path/to/blacklist.bed>',
-        default='/home/data/encode/ENCODE.hg19.blacklist.bed',
-        help=(
-            'path to ENCODE blacklist file '
-            '[/home/data/encode/ENCODE.hg19.blacklist.bed]'
-        )
+        default=os.path.join(os.path.dirname(__file__), 'ENCFF001TDO.bed.gz'),
+        help='path to ENCODE blacklist file '
     )
     args = parser.parse_args()
     if not args.name:
