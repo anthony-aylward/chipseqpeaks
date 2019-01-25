@@ -216,7 +216,7 @@ class ChIPSeqPeaks():
             )
             for ext in self.output_extensions:
                 with subprocess.Popen(
-                    ('cat', '{}_{}'.format(temp_name, ext)),
+                    ('cat', '{}_{}'.format(sample_name, ext)),
                     stdout=subprocess.PIPE
                 ) as cat:
                     output_file, _ = cat.communicate()
