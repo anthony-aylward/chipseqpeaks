@@ -210,8 +210,8 @@ class ChIPSeqPeaks():
                     '--broad',
                     '--broad-cutoff', str(self.broad_cutoff)
                 )
-                + self.nolambda * ('--nolambda')
-                + self.call_summits * ('--call-summits'),
+                + self.nolambda * ('--nolambda',)
+                + self.call_summits * ('--call-summits',),
                 stderr=self.log
             )
             for ext in self.output_extensions:
