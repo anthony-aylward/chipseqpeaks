@@ -47,6 +47,22 @@ import tempfile
 # Constants ====================================================================
 
 MACS2_PATH = os.environ.get('MACS2_PATH', shutil.which('macs2'))
+HG38_BLACKLIST_PATH = os.path.join(
+    os.path.dirname(__file__), 'ENCFF419RSJ.bed.gz'
+)
+HG19_BLACKLIST_PATH = os.path.join(
+    os.path.dirname(__file__), 'ENCFF001TDO.bed.gz'
+)
+MM10_BLACKLIST_PATH = os.path.join(
+    os.path.dirname(__file__), 'ENCFF547MET.bed.gz'
+)
+GENOME_TO_BLACKLIST = {
+    'GRCh38': HG38_BLACKLIST_PATH
+    'hg38': HG38_BLACKLIST_PATH
+    'GRCh37': HG19_BLACKLIST_PATH
+    'hg19': HG19_BLACKLIST_PATH
+    'mm10': MM10_BLACKLIST_PATH
+}
 
 
 
@@ -266,18 +282,19 @@ class ChIPSeqPeaks():
     
     def remove_blacklisted_peaks(
         self,
-        blacklist_path: str = os.path.join(
-            os.path.dirname(__file__), 'ENCFF001TDO.bed.gz'
-        )
+        blacklist_path=None,
+        genome='GRCh38'
     ):
         """Remove blacklisted peaks from the peak calls
         
         Parameters
         ----------
-        blacklist_path : str
+        blacklist_path
             path to the ENCODE blacklist file
         """
 
+        if not blacklist_path:
+            blacklist_path = GENOME_TO_BLACKLIST[genome]
         for peaks in (self.peaks_narrowPeak,) + (
             (self.peaks_broadPeak, self.peaks_gappedPeak) if self.broad else ()
         ): 

@@ -12,7 +12,7 @@
 import argparse
 import os.path
 
-from chipseqpeaks.chip_seq_peaks import ChIPSeqPeaks
+from chipseqpeaks.chip_seq_peaks import ChIPSeqPeaks, HG38_BLACKLIST_PATH
 
 
 
@@ -101,8 +101,13 @@ def parse_arguments():
     blacklist_group.add_argument(
         '--blacklist-file',
         metavar='<path/to/blacklist.bed>',
-        default=os.path.join(os.path.dirname(__file__), 'ENCFF001TDO.bed.gz'),
         help='path to ENCODE blacklist file '
+    )
+    blacklist_group.add_argument(
+        '--genome',
+        choices=('GRCh38', 'hg38', 'GRCh37', 'hg19', 'mm10'),
+        default='GRCh38',
+        help='genome assembly'
     )
     args = parser.parse_args()
     if not args.name:
@@ -128,7 +133,10 @@ def main():
             tmp_dir='/home/data/tmp'
         )
         if args.remove_blacklisted_peaks:
-            cp.remove_blacklisted_peaks(args.blacklist_file)
+            cp.remove_blacklisted_peaks(
+                blacklist_file=args.blacklist_file,
+                genome=args.genome
+            )
     with open(
         os.path.join(args.output_dir, f'{args.name}.bdgcmp.log'), 'w'
     ) as g:
