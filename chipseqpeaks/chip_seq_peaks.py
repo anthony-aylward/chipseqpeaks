@@ -138,10 +138,7 @@ class ChIPSeqPeaks():
             + bool(control_bam) * ['control_lambda.bdg']
             + broad * ['peaks.broadPeak', 'peaks.gappedPeak']
         )
-        self.call_peaks(
-            sample_name=os.path.basename(treatment_bam),
-            temp_file_dir=temp_file_dir,
-        )
+        self.call_peaks(temp_file_dir=temp_file_dir)
     
     def __enter__(self):
         """When an instance of this class is used as a context manager, it is
@@ -170,7 +167,7 @@ class ChIPSeqPeaks():
             )
         ).format(self)
     
-    def call_peaks(self, sample_name: str, temp_file_dir=None):
+    def call_peaks(self, temp_file_dir=None):
         """Perform peak calling with MACS2
 
         Parameters
@@ -200,7 +197,7 @@ class ChIPSeqPeaks():
                     '--extsize', '200',
                     '--keep-dup', 'all',
                     '--treatment', temp_treatment_bam.name,
-                    '--name', sample_name,
+                    '--name', temp_name,
                     '--qvalue', str(self.qvalue),
                     '--shift', str(self.shift),
                 )
@@ -216,7 +213,7 @@ class ChIPSeqPeaks():
             )
             for ext in self.output_extensions:
                 with subprocess.Popen(
-                    ('cat', '{}_{}'.format(sample_name, ext)),
+                    ('cat', '{}_{}'.format(temp_name, ext)),
                     stdout=subprocess.PIPE
                 ) as cat:
                     output_file, _ = cat.communicate()
