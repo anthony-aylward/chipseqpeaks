@@ -163,7 +163,7 @@ class ChIPSeqPeaks():
             + broad * ['peaks.broadPeak', 'peaks.gappedPeak']
         )
         self.call_peaks(
-            sample_name=os.path.basename(treatment_bam)
+            sample_name=os.path.basename(treatment_bam),
             temp_file_dir=temp_file_dir,
         )
     
