@@ -393,8 +393,8 @@ def bedtools_intersect(peaks: bytes, blacklist_path: str, log=None):
         (
             'bedtools', 'intersect',
             '-a', 'stdin',
-            '-b', blacklist_path
-            '-v',
+            '-b', blacklist_path,
+            '-v'
         ),
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
