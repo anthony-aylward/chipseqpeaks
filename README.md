@@ -1,4 +1,4 @@
-# ChipSeqPeaks
+# chipseqpeaks
 
 Easy management of ChIP-seq peak calling data
 
