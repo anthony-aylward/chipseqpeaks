@@ -134,7 +134,7 @@ def main():
         )
         if args.remove_blacklisted_peaks:
             cp.remove_blacklisted_peaks(
-                blacklist_file=args.blacklist_file,
+                blacklist_path=args.blacklist_file,
                 genome=args.genome
             )
     with open(
