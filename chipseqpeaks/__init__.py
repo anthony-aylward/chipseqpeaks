@@ -4,6 +4,8 @@ A mini-module for managing ChIP-seq peak calling data. The language of this
 module treats "ChIP-seq peaks" as an abstraction, but mostly handles them as 
 MACS2 output stored in memory.
 
+Blacklist data source: https://www.encodeproject.org/annotations/ENCSR636HFF/
+
 Example
 -------
 import chipseqpeaks
