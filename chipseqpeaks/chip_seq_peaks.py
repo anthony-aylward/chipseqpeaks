@@ -329,7 +329,7 @@ class MissingMACS2Error(Error):
     pass
 
 
-class MissingBedToolsError(Error):
+class MissingBEDToolsError(Error):
     """Missing bedtools error"""
 
     pass
