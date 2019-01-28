@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='chipseqpeaks',
-    version='0.0.5',
+    version='0.0.6',
     author='Anthony Aylward, Joshua Chiou',
     author_email='aaylward@eng.ucsd.edu',
     description='Easy management of ChIP-seq peak calling',
