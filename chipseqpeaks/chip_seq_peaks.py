@@ -389,7 +389,7 @@ def bedtools_intersect(
     """
     
     if not bedtools_path:
-        raise MissingBedToolsError(
+        raise MissingBEDToolsError(
             '''bedtools was not found! Please provide the `bedtools_path`
             parameter to bedtools_intersect(), or set the `BEDTOOLS_PATH`
             environment variable, or make sure `bedtools` is installed and
