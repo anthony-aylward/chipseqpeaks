@@ -23,10 +23,7 @@ import tempfile
 # Constants ====================================================================
 
 MACS2_PATH = os.environ.get('MACS2_PATH', shutil.which('macs2'))
-BEDTOOLS_PATH = os.environ.get(
-    'BEDTOOLS_PATH',
-    shutil.which('bedtools')
-)
+BEDTOOLS_PATH = os.environ.get('BEDTOOLS_PATH', shutil.which('bedtools'))
 HG38_BLACKLIST_PATH = os.path.join(
     os.path.dirname(__file__), 'ENCFF419RSJ.bed.gz'
 )
