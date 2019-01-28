@@ -23,6 +23,10 @@ import tempfile
 # Constants ====================================================================
 
 MACS2_PATH = os.environ.get('MACS2_PATH', shutil.which('macs2'))
+BEDTOOLS_PATH = os.environ.get(
+    'BEDTOOLS_PATH',
+    shutil.which('bedtools')
+)
 HG38_BLACKLIST_PATH = os.path.join(
     os.path.dirname(__file__), 'ENCFF419RSJ.bed.gz'
 )
@@ -256,7 +260,8 @@ class ChIPSeqPeaks():
     def remove_blacklisted_peaks(
         self,
         blacklist_path: str = HG38_BLACKLIST_PATH,
-        genome: str = 'GRCh38'
+        genome: str = 'GRCh38',
+        bedtools_path: str = BEDTOOLS_PATH
     ):
         """Remove blacklisted peaks from the peak calls
         
@@ -266,6 +271,8 @@ class ChIPSeqPeaks():
             path to the ENCODE blacklist file
         genome : str
             genome assembly (for selection of blacklist)
+        bedtools_path : str
+            Path to bedtools executable
         """
 
         if (blacklist_path == HG38_BLACKLIST_PATH) and (
@@ -275,7 +282,12 @@ class ChIPSeqPeaks():
         for peaks in (self.peaks_narrowPeak,) + (
             (self.peaks_broadPeak, self.peaks_gappedPeak) if self.broad else ()
         ): 
-            peaks = bedtools_intersect(peaks, blacklist_path, log=self.log)
+            peaks = bedtools_intersect(
+                peaks,
+                blacklist_path,
+                log=self.log,
+                bedtools_path=bedtools_intersect
+            )
     
     def write(self, prefix, *extensions):
         """Write MACS2 output to disk
@@ -310,13 +322,19 @@ class Error(Exception):
 
 class BadInputError(Error):
     """Bad input error"""
-    
+
     pass
 
 
 class MissingMACS2Error(Error):
     """Missing MACS2 error"""
-    
+
+    pass
+
+
+class MissingBedToolsError(Error):
+    """Missing bedtools error"""
+
     pass
 
 
@@ -348,7 +366,12 @@ def parse_input(input_file):
     return bytes_obj
 
 
-def bedtools_intersect(peaks: bytes, blacklist_path: str, log=None):
+def bedtools_intersect(
+    peaks: bytes,
+    blacklist_path: str = HG38_BLACKLIST_PATH,
+    log=None,
+    bedtools_path: str = BEDTOOLS_PATH
+):
     """Apply `bedtools intersect` to a file
 
     Parameters
@@ -359,16 +382,27 @@ def bedtools_intersect(peaks: bytes, blacklist_path: str, log=None):
         Path to ENCODE blacklist file
     log
         log file
-    
+    bedtools_path : str
+        Path to bedtools executable
+
     Returns
     -------
     bytes
         BED file with blacklisted peaks removed
     """
+    
+    if not bedtools_path:
+        raise MissingBedToolsError(
+            '''bedtools was not found! Please provide the `bedtools_path`
+            parameter to bedtools_intersect(), or set the `BEDTOOLS_PATH`
+            environment variable, or make sure `bedtools` is installed and
+            can be found via the `PATH` environment variable.
+            '''
+        )
 
     with subprocess.Popen(
         (
-            'bedtools', 'intersect',
+            bedtools_path, 'intersect',
             '-a', 'stdin',
             '-b', blacklist_path,
             '-v'
