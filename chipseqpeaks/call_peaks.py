@@ -141,5 +141,6 @@ def main():
         os.path.join(args.output_dir, f'{args.name}.bdgcmp.log'), 'w'
     ) as g:
         cp.log = g
-        cp.bdgcmp()
+        if not args.atac_seq:
+            cp.bdgcmp()
         cp.write(os.path.join(args.output_dir, args.name))
