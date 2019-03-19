@@ -110,6 +110,13 @@ def parse_arguments():
         default='GRCh38',
         help='genome assembly'
     )
+
+    config_group = parser.add_argument_group('configuration arguments')
+    config_group.add_argument(
+        '--tmp-dir',
+        metavar='<temp/file/dir/>',
+        help='directory to use for temporary files'
+    )
     args = parser.parse_args()
     if not args.name:
         args.name = os.path.basename(args.treatment).split('.')[0]
@@ -130,7 +137,8 @@ def main():
 	        broad_cutoff=args.broad_cutoff,
             nomodel=args.nomodel,
             shift=args.shift,
-	        log=f
+	        log=f,
+            temp_file_dir=args.tmp_dir
         )
         if args.remove_blacklisted_peaks:
             cp.remove_blacklisted_peaks(

@@ -134,6 +134,7 @@ class ChIPSeqPeaks():
         self.cleans_up = False
         self.cleanup_prefix = None
         self.log = log
+        self.temp_file_dir = temp_file_dir
         self.output_extensions = (
             ['peaks.xls', 'peaks.narrowPeak', 'summits.bed', 'treat_pileup.bdg']
             + bool(control_bam) * ['control_lambda.bdg']
@@ -224,11 +225,11 @@ class ChIPSeqPeaks():
         """Create a bedgraph"""
 
         self.output_extensions.append('ppois.bdg')
-        with tempfile.NamedTemporaryFile() as (
+        with tempfile.NamedTemporaryFile(dir=self.temp_file_dir) as (
             temp_treat_pileup
-        ), tempfile.NamedTemporaryFile() as (
+        ), tempfile.NamedTemporaryFile(dir=self.temp_file_dir) as (
             temp_control_lambda
-        ), tempfile.TemporaryDirectory() as (
+        ), tempfile.TemporaryDirectory(dir=self.temp_file_dir) as (
             temp_dir_name
         ):
             temp_treat_pileup.write(self.treat_pileup_bdg)
