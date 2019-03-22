@@ -67,7 +67,7 @@ def parse_arguments():
         help='Broad peak option for MACS2 callpeak'
     )
     macs2_group.add_argument(
-        '--broad_cutoff',
+        '--broad-cutoff',
         metavar='<float>',
         type=float,
         default=0.05,

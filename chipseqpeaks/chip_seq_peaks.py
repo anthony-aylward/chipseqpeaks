@@ -3,7 +3,8 @@
 # chipseqpeaks.py
 #===============================================================================
 
-"""Easy management of ChIP-seq peak calling data"""
+"""A wrapper for MACS2 that abstracts out some things and makes it easier to use
+"""
 
 
 
@@ -69,6 +70,8 @@ class ChIPSeqPeaks():
         file object to which logs will be writtern
     output_extensions : list
         the extensions for MACS2 output files
+    temp_file_dir
+        directory name for temporary files
     """
     
     def __init__(
