@@ -1,28 +1,40 @@
 # chipseqpeaks
 
-Easy management of ChIP-seq peak calling data
+A wrapper for MACS2 that abstracts out some things and makes it easier to use
 
-A mini-module for managing ChIP-seq peak calling data. The language of this
-module treats "ChIP-seq peaks" as an abstraction, but mostly handles them as 
-MACS2 output stored in memory.
+## Installation
 
+```sh
+pip3 install chipseqpeaks
 ```
-Example
--------
+
+or
+
+```sh
+pip3 install --user chipseqpeaks
+```
+
+## Example API usage
+```python
 import chipseqpeaks
 with chipseqpeaks.ChIPSeqPeaks(<bytes object or path to BAM file>) as cp:
     cp.cleans_up = False
     cp.remove_blacklisted_peaks(<path/to/blacklist.bed>)
     cp.write(<output prefix>)
+```
 
-Classes
--------
-ChIPSeqPeaks
-    object representing ChIP-seq peaks
+## Example command line usage
 
-Functions
----------
-parse_input
-    check that an input is str or bytes and return the bam file as a bytes
-    object
+For help text, see:
+```sh
+chipseqpeaks-call -h
+```
+For ChIP-seq:
+```sh
+chipseqpeaks-call --control input.bam chip.bam
+```
+
+For ATAC-seq:
+```sh
+chipseqpeaks-call --atac-seq atac.bam
 ```
