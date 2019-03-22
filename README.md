@@ -16,8 +16,8 @@ pip3 install --user chipseqpeaks
 
 ## Example API usage
 ```python
-import chipseqpeaks
-with chipseqpeaks.ChIPSeqPeaks(<bytes object or path to BAM file>) as cp:
+from chipseqpeaks import ChIPSeqPeaks
+with ChIPSeqPeaks(<bytes object or path to BAM file>) as cp:
     cp.cleans_up = False
     cp.remove_blacklisted_peaks(<path/to/blacklist.bed>)
     cp.write(<output prefix>)
