@@ -1,6 +1,7 @@
 # chipseqpeaks
 
-A wrapper for MACS2 that abstracts out some things and makes it easier to use
+A wrapper for MACS2 that abstracts out some things and makes it easier to use.
+Thanks due to Joshua Chiou for inspiration and contributions.
 
 ## Installation
 
