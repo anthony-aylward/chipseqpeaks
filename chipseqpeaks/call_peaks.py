@@ -38,22 +38,13 @@ def parse_arguments():
         help='path to output directory [.]'
     )
     io_group.add_argument(
-        '--control',
-        metavar='<path/to/control.bam>',
-        help='path to control BAM file'
-    )
-    io_group.add_argument(
         '--name',
         metavar='<name>',
         help='sample name'
     )
 
     macs2_group = parser.add_argument_group('MACS2 arguments')
-    macs2_group.add_argument(
-        '--atac-seq',
-        action='store_true',
-        help='configure MACS2 for ATAC-seq (--nomodel --shift -100)'
-    )
+    required = macs2_group.add_mutually_exclusive_group(required=True)
     macs2_group.add_argument(
         '--qvalue',
         metavar='<float>',
@@ -116,6 +107,17 @@ def parse_arguments():
         '--tmp-dir',
         metavar='<temp/file/dir/>',
         help='directory to use for temporary files'
+    )
+
+    required.add_argument(
+        '--control',
+        metavar='<path/to/control.bam>',
+        help='path to control BAM file'
+    )
+    required.add_argument(
+        '--atac-seq',
+        action='store_true',
+        help='configure MACS2 for ATAC-seq (--nomodel --shift -100)'
     )
     args = parser.parse_args()
     if not args.name:
