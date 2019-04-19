@@ -205,6 +205,7 @@ class ChIPSeqPeaks():
                     '--name', temp_name,
                     '--qvalue', str(self.qvalue),
                     '--shift', str(self.shift),
+                    '--tempdir', temp_dir or tempfile.gettempdir()
                 )
                 + bool(self.control_bam) * ('--control', temp_control_bam.name)
                 + self.nomodel * ('--nomodel',)
