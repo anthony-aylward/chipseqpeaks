@@ -3,6 +3,11 @@
 A wrapper for MACS2 that abstracts out some things and makes it easier to use.
 Thanks due to Joshua Chiou for inspiration and contributions.
 
+> **Warning:** Before using chipseqpeaks, please make sure that one of the
+> environment variables TMPDIR, TEMP, or TMP is set to an appropriate path.
+> This is the only way to ensure MACS2 writes temporary files to the correct
+> location, and failing to do so may cause errors on some systems. (ง •̀_•́)ง
+
 ## Installation
 
 ```sh
