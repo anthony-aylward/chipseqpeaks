@@ -10,7 +10,9 @@
 # Imports ======================================================================
 
 import argparse
+import os
 import os.path
+import warnings
 
 from chipseqpeaks.chip_seq_peaks import ChIPSeqPeaks, HG38_BLACKLIST_PATH
 
@@ -126,6 +128,14 @@ def parse_arguments():
 
 
 def main():
+    if not any(os.environ.get(var) for var in 'TMPDIR', 'TEMP', 'TMP'):
+        warnings.warn(
+            'Before using chipseqpeaks, please make sure that one of the '
+            'environment variables TMPDIR, TEMP, or TMP is set to an '
+            'appropriate value. This is the only way to ensure MACS2 writes '
+            'temporary files to the correct location, and failing to do so may '
+            'cause errors on some systems. (ง •̀_•́)ง'
+        )
     args = parse_arguments()
     with open(
         os.path.join(args.output_dir, f'{args.name}.macs2_callpeaks.log'), 'w'
@@ -140,7 +150,7 @@ def main():
             nomodel=args.nomodel,
             shift=args.shift,
 	        log=f,
-            temp_file_dir=args.tmp_dir
+            temp_dir=args.tmp_dir
         )
         if args.remove_blacklisted_peaks:
             cp.remove_blacklisted_peaks(

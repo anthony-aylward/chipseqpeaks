@@ -70,7 +70,7 @@ class ChIPSeqPeaks():
         file object to which logs will be writtern
     output_extensions : list
         the extensions for MACS2 output files
-    temp_file_dir
+    temp_dir
         directory name for temporary files
     """
     
@@ -88,7 +88,7 @@ class ChIPSeqPeaks():
         nolambda=False,
         call_summits=False,
         log=None,
-        temp_file_dir=None
+        temp_dir=None
     ):
         """Collect object attributes and call peaks
         
@@ -112,7 +112,7 @@ class ChIPSeqPeaks():
             --broad-cutoff parameter supplied to MACS2
         log
             file object to which logs will be writtern
-        temp_file_dir
+        temp_dir
             directory name for temporary files
         """
 
@@ -137,13 +137,13 @@ class ChIPSeqPeaks():
         self.cleans_up = False
         self.cleanup_prefix = None
         self.log = log
-        self.temp_file_dir = temp_file_dir
+        self.temp_dir = temp_dir
         self.output_extensions = (
             ['peaks.xls', 'peaks.narrowPeak', 'summits.bed', 'treat_pileup.bdg']
             + bool(control_bam) * ['control_lambda.bdg']
             + broad * ['peaks.broadPeak', 'peaks.gappedPeak']
         )
-        self.call_peaks(temp_file_dir=temp_file_dir)
+        self.call_peaks(temp_dir=temp_dir)
     
     def __enter__(self):
         """When an instance of this class is used as a context manager, it is
@@ -172,20 +172,20 @@ class ChIPSeqPeaks():
             )
         ).format(self)
     
-    def call_peaks(self, temp_file_dir=None):
+    def call_peaks(self, temp_dir=None):
         """Perform peak calling with MACS2
 
         Parameters
         ----------
-        temp_file_dir : str
+        temp_dir : str
             directory name for temporary files
         """
 
-        with tempfile.NamedTemporaryFile(dir=temp_file_dir) as (
+        with tempfile.NamedTemporaryFile(dir=temp_dir) as (
             temp_treatment_bam
-        ), tempfile.NamedTemporaryFile(dir=temp_file_dir) as (
+        ), tempfile.NamedTemporaryFile(dir=temp_dir) as (
             temp_control_bam
-        ), tempfile.TemporaryDirectory(dir=temp_file_dir) as (
+        ), tempfile.TemporaryDirectory(dir=temp_dir) as (
             temp_dir_name
         ):
             temp_treatment_bam.write(self.treatment_bam)
@@ -228,11 +228,11 @@ class ChIPSeqPeaks():
         """Create a bedgraph"""
 
         self.output_extensions.append('ppois.bdg')
-        with tempfile.NamedTemporaryFile(dir=self.temp_file_dir) as (
+        with tempfile.NamedTemporaryFile(dir=self.temp_dir) as (
             temp_treat_pileup
-        ), tempfile.NamedTemporaryFile(dir=self.temp_file_dir) as (
+        ), tempfile.NamedTemporaryFile(dir=self.temp_dir) as (
             temp_control_lambda
-        ), tempfile.TemporaryDirectory(dir=self.temp_file_dir) as (
+        ), tempfile.TemporaryDirectory(dir=self.temp_dir) as (
             temp_dir_name
         ):
             temp_treat_pileup.write(self.treat_pileup_bdg)
