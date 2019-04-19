@@ -44,7 +44,6 @@ def parse_arguments():
     )
 
     macs2_group = parser.add_argument_group('MACS2 arguments')
-    required = macs2_group.add_mutually_exclusive_group(required=True)
     macs2_group.add_argument(
         '--qvalue',
         metavar='<float>',
@@ -109,6 +108,7 @@ def parse_arguments():
         help='directory to use for temporary files'
     )
 
+    required = macs2_group.add_mutually_exclusive_group(required=True)
     required.add_argument(
         '--control',
         metavar='<path/to/control.bam>',
