@@ -20,13 +20,12 @@ from chipseqpeaks.chip_seq_peaks import ChIPSeqPeaks, HG38_BLACKLIST_PATH
 
 # Constants ====================================================================
 
-TMPDIR_WARNING = (
-'''Before using chipseqpeaks, please make sure that one of the environment
+TMPDIR_WARNING = '''
+Before using chipseqpeaks, please make sure that one of the environment
 variables TMPDIR, TEMP, or TMP is set to an appropriate path. This is the only
 way to ensure MACS2 writes temporary files to the correct location, and failing
 to do so may cause errors on some systems. (ง •̀_•́)ง
 '''
-)
 
 
 
