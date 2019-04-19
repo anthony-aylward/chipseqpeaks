@@ -132,7 +132,7 @@ def main():
         warnings.warn(
             'Before using chipseqpeaks, please make sure that one of the '
             'environment variables TMPDIR, TEMP, or TMP is set to an '
-            'appropriate value. This is the only way to ensure MACS2 writes '
+            'appropriate path. This is the only way to ensure MACS2 writes '
             'temporary files to the correct location, and failing to do so may '
             'cause errors on some systems. (ง •̀_•́)ง'
         )
