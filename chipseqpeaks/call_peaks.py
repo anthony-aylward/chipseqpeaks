@@ -128,7 +128,7 @@ def parse_arguments():
 
 
 def main():
-    if not any(os.environ.get(var) for var in 'TMPDIR', 'TEMP', 'TMP'):
+    if not any(os.environ.get(var) for var in ('TMPDIR', 'TEMP', 'TMP')):
         warnings.warn(
             'Before using chipseqpeaks, please make sure that one of the '
             'environment variables TMPDIR, TEMP, or TMP is set to an '
