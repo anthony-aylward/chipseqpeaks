@@ -168,4 +168,5 @@ def main():
         cp.log = g
         if not args.atac_seq:
             cp.bdgcmp()
+        cp.generate_bed()
         cp.write(os.path.join(args.output_dir, args.name))

@@ -306,7 +306,14 @@ class ChIPSeqPeaks():
             with open('{}_{}'.format(prefix, ext), 'wb') as f:
                 f.write(getattr(self, ext.replace('.', '_')))
         self.cleanup_prefix = prefix
-    
+
+    def generate_bed(self):
+        self.peaks_bed = '\n'.join(
+            '\t'.join(line.split()[:3])
+            for line in self.peaks_narrowPeak.decode().splitlines() + ['']
+        ).encode()
+        self.output_extensions.append('peaks.bed')
+
     def clean_up(self, path):
         if (os.path.isfile(path) if path else False):
             os.remove(path)
