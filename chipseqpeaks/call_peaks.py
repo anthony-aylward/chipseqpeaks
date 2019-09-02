@@ -10,9 +10,22 @@
 # Imports ======================================================================
 
 import argparse
+import os
 import os.path
+import warnings
 
 from chipseqpeaks.chip_seq_peaks import ChIPSeqPeaks, HG38_BLACKLIST_PATH
+
+
+
+# Constants ====================================================================
+
+TMPDIR_WARNING = '''
+Before using chipseqpeaks, please make sure that one of the environment
+variables TMPDIR, TEMP, or TMP is set to an appropriate path. This is the only
+way to ensure MACS2 writes temporary files to the correct location, and failing
+to do so may cause errors on some systems. (ง •̀_•́)ง
+'''
 
 
 
@@ -38,22 +51,12 @@ def parse_arguments():
         help='path to output directory [.]'
     )
     io_group.add_argument(
-        '--control',
-        metavar='<path/to/control.bam>',
-        help='path to control BAM file'
-    )
-    io_group.add_argument(
         '--name',
         metavar='<name>',
         help='sample name'
     )
 
     macs2_group = parser.add_argument_group('MACS2 arguments')
-    macs2_group.add_argument(
-        '--atac-seq',
-        action='store_true',
-        help='configure MACS2 for ATAC-seq (--nomodel --shift -100)'
-    )
     macs2_group.add_argument(
         '--qvalue',
         metavar='<float>',
@@ -67,7 +70,7 @@ def parse_arguments():
         help='Broad peak option for MACS2 callpeak'
     )
     macs2_group.add_argument(
-        '--broad_cutoff',
+        '--broad-cutoff',
         metavar='<float>',
         type=float,
         default=0.05,
@@ -117,6 +120,18 @@ def parse_arguments():
         metavar='<temp/file/dir/>',
         help='directory to use for temporary files'
     )
+
+    required = macs2_group.add_mutually_exclusive_group(required=True)
+    required.add_argument(
+        '--control',
+        metavar='<path/to/control.bam>',
+        help='path to control BAM file'
+    )
+    required.add_argument(
+        '--atac-seq',
+        action='store_true',
+        help='configure MACS2 for ATAC-seq (--nomodel --shift -100)'
+    )
     args = parser.parse_args()
     if not args.name:
         args.name = os.path.basename(args.treatment).split('.')[0]
@@ -124,6 +139,8 @@ def parse_arguments():
 
 
 def main():
+    if not any(os.environ.get(var) for var in ('TMPDIR', 'TEMP', 'TMP')):
+        warnings.warn(TMPDIR_WARNING)
     args = parse_arguments()
     with open(
         os.path.join(args.output_dir, f'{args.name}.macs2_callpeaks.log'), 'w'
@@ -138,7 +155,7 @@ def main():
             nomodel=args.nomodel,
             shift=args.shift,
 	        log=f,
-            temp_file_dir=args.tmp_dir
+            temp_dir=args.tmp_dir
         )
         if args.remove_blacklisted_peaks:
             cp.remove_blacklisted_peaks(
@@ -151,4 +168,5 @@ def main():
         cp.log = g
         if not args.atac_seq:
             cp.bdgcmp()
+        cp.generate_bed()
         cp.write(os.path.join(args.output_dir, args.name))

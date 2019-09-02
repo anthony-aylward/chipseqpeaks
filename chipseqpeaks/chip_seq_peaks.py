@@ -3,7 +3,8 @@
 # chipseqpeaks.py
 #===============================================================================
 
-"""Easy management of ChIP-seq peak calling data"""
+"""A wrapper for MACS2 that abstracts out some things and makes it easier to use
+"""
 
 
 
@@ -69,6 +70,8 @@ class ChIPSeqPeaks():
         file object to which logs will be writtern
     output_extensions : list
         the extensions for MACS2 output files
+    temp_dir
+        directory name for temporary files
     """
     
     def __init__(
@@ -85,7 +88,7 @@ class ChIPSeqPeaks():
         nolambda=False,
         call_summits=False,
         log=None,
-        temp_file_dir=None
+        temp_dir=None
     ):
         """Collect object attributes and call peaks
         
@@ -109,7 +112,7 @@ class ChIPSeqPeaks():
             --broad-cutoff parameter supplied to MACS2
         log
             file object to which logs will be writtern
-        temp_file_dir
+        temp_dir
             directory name for temporary files
         """
 
@@ -134,13 +137,13 @@ class ChIPSeqPeaks():
         self.cleans_up = False
         self.cleanup_prefix = None
         self.log = log
-        self.temp_file_dir = temp_file_dir
+        self.temp_dir = temp_dir
         self.output_extensions = (
             ['peaks.xls', 'peaks.narrowPeak', 'summits.bed', 'treat_pileup.bdg']
             + bool(control_bam) * ['control_lambda.bdg']
             + broad * ['peaks.broadPeak', 'peaks.gappedPeak']
         )
-        self.call_peaks(temp_file_dir=temp_file_dir)
+        self.call_peaks(temp_dir=temp_dir)
     
     def __enter__(self):
         """When an instance of this class is used as a context manager, it is
@@ -169,20 +172,20 @@ class ChIPSeqPeaks():
             )
         ).format(self)
     
-    def call_peaks(self, temp_file_dir=None):
+    def call_peaks(self, temp_dir=None):
         """Perform peak calling with MACS2
 
         Parameters
         ----------
-        temp_file_dir : str
+        temp_dir : str
             directory name for temporary files
         """
 
-        with tempfile.NamedTemporaryFile(dir=temp_file_dir) as (
+        with tempfile.NamedTemporaryFile(dir=temp_dir) as (
             temp_treatment_bam
-        ), tempfile.NamedTemporaryFile(dir=temp_file_dir) as (
+        ), tempfile.NamedTemporaryFile(dir=temp_dir) as (
             temp_control_bam
-        ), tempfile.TemporaryDirectory(dir=temp_file_dir) as (
+        ), tempfile.TemporaryDirectory(dir=temp_dir) as (
             temp_dir_name
         ):
             temp_treatment_bam.write(self.treatment_bam)
@@ -202,6 +205,7 @@ class ChIPSeqPeaks():
                     '--name', temp_name,
                     '--qvalue', str(self.qvalue),
                     '--shift', str(self.shift),
+                    '--tempdir', temp_dir or tempfile.gettempdir()
                 )
                 + bool(self.control_bam) * ('--control', temp_control_bam.name)
                 + self.nomodel * ('--nomodel',)
@@ -225,11 +229,11 @@ class ChIPSeqPeaks():
         """Create a bedgraph"""
 
         self.output_extensions.append('ppois.bdg')
-        with tempfile.NamedTemporaryFile(dir=self.temp_file_dir) as (
+        with tempfile.NamedTemporaryFile(dir=self.temp_dir) as (
             temp_treat_pileup
-        ), tempfile.NamedTemporaryFile(dir=self.temp_file_dir) as (
+        ), tempfile.NamedTemporaryFile(dir=self.temp_dir) as (
             temp_control_lambda
-        ), tempfile.TemporaryDirectory(dir=self.temp_file_dir) as (
+        ), tempfile.TemporaryDirectory(dir=self.temp_dir) as (
             temp_dir_name
         ):
             temp_treat_pileup.write(self.treat_pileup_bdg)
@@ -302,7 +306,14 @@ class ChIPSeqPeaks():
             with open('{}_{}'.format(prefix, ext), 'wb') as f:
                 f.write(getattr(self, ext.replace('.', '_')))
         self.cleanup_prefix = prefix
-    
+
+    def generate_bed(self):
+        self.peaks_bed = '\n'.join(
+            '\t'.join(line.split()[:3])
+            for line in self.peaks_narrowPeak.decode().splitlines() + ['']
+        ).encode()
+        self.output_extensions.append('peaks.bed')
+
     def clean_up(self, path):
         if (os.path.isfile(path) if path else False):
             os.remove(path)
