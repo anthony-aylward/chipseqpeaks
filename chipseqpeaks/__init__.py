@@ -26,4 +26,7 @@ parse_input
     object
 """
 
-from chipseqpeaks.chip_seq_peaks import ChIPSeqPeaks
+from chipseqpeaks.chip_seq_peaks import (
+    ChIPSeqPeaks, MACS2_PATH, BEDTOOLS_PATH, HG38_BLACKLIST_PATH,
+    HG19_BLACKLIST_PATH, MM10_BLACKLIST_PATH
+)
