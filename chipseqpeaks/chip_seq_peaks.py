@@ -288,7 +288,7 @@ class ChIPSeqPeaks():
                 peaks,
                 blacklist_path,
                 log=self.log,
-                bedtools_path=bedtools_intersect
+                bedtools_path=bedtools_path
             )
     
     def write(self, prefix, *extensions):
