@@ -284,12 +284,13 @@ class ChIPSeqPeaks():
         for peaks in (self.peaks_narrowPeak,) + (
             (self.peaks_broadPeak, self.peaks_gappedPeak) if self.broad else ()
         ): 
-            peaks = bedtools_intersect(
+            blacklisted_peaks = bedtools_intersect(
                 peaks,
                 blacklist_path,
                 log=self.log,
                 bedtools_path=bedtools_path
             )
+            peaks = blacklisted_peaks
     
     def write(self, prefix, *extensions):
         """Write MACS2 output to disk
