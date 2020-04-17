@@ -61,8 +61,8 @@ def parse_arguments():
         '--qvalue',
         metavar='<float>',
         type=float,
-        default=0.01,
-        help='MACS2 callpeak qvalue cutoff [0.01]'
+        default=0.05,
+        help='MACS2 callpeak qvalue cutoff [0.05]'
     )
     macs2_group.add_argument(
         '--broad',
